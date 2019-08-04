@@ -56,6 +56,41 @@ public class Main {
 		roots[b] = root(a);
 	}
 	
+	//‘fˆö”•ª‰ğ‚ğ‚·‚é(index_0:‘f” index_1:ŒÂ”)
+	static List<long[]> factorization(long M){
+		List<long[]> primes = new ArrayList<>();
+
+		long now_prime = 2;
+		long now_M = M;
+		while(now_prime*now_prime<=M){
+			if(now_M%now_prime == 0){
+				now_M /= now_prime;
+				long[] prime = new long[2];
+				prime[0] = now_prime;
+				prime[1] = 1;
+				while(now_M%now_prime == 0){
+					now_M /= now_prime;
+					prime[1]++;
+				}
+				primes.add(prime);
+				
+			}
+			if(now_prime%2 == 0){
+				now_prime++;
+			}else{
+				now_prime += 2;
+			}
+		}
+		if (now_M>1 || M==1){
+			long[] prime = new long[2];
+			prime[0] = now_M;
+			prime[1] = 1;
+			primes.add(prime);
+		}
+		
+		return primes;
+	}
+	
 	//‚Q‚Â‚Ìint”z—ñ‚ğ˜AŒ‹‚³‚¹‚é
 	static int[] joinArray(int[] A, int[] B){
 		int[] tmp = new int[A.length + B.length];
