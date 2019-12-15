@@ -57,6 +57,19 @@ public class Main {
 		//char[] A = scan.next().toCharArray();
 		int p = scan.nextInt();
 		int n = scan.nextInt();
+
+		int[] cnt = new int[p];
+		for(int i=0; i<p; i++){
+			//System.out.println(modPow(i, n, p));
+			cnt[(int)modPow(i, n, p)]++;
+		}
+		//for(int c : cnt)System.out.print(c+" ");
+		int ans = 0;
+		for(int i=0; i<p; i++){
+			for(int j=0; j<p; j++){
+				ans += cnt[i]*cnt[j]*cnt[(p+i-j)%p];
+			}
+		}
 		
 		
 		
@@ -90,7 +103,7 @@ public class Main {
 		return cnt;
 	}
 	
-	//繰り返し二乗法(剰余を返す)
+	//繰り返し二乗法(x^n)
 	static long pow(long x, long n){
 		long sum = 1;
 		while(n>0){
@@ -103,7 +116,7 @@ public class Main {
 		return sum;
 	}
 	
-	//繰り返し二乗法(剰余を返す)
+	//繰り返し二乗法(x^n % mod)
 	static long modPow(long x, long n, long mod){
 		long sum = 1;
 		while(n>0){
