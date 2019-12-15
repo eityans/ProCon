@@ -91,13 +91,29 @@ public class Main {
 	}
 	
 	//繰り返し二乗法(剰余を返す)
+	static long pow(long x, long n){
+		long sum = 1;
+		while(n>0){
+			if((n&1) == 1 ){
+				sum = sum * x;
+			}
+			x = x * x;
+			n >>= 1;
+		}
+		return sum;
+	}
+	
+	//繰り返し二乗法(剰余を返す)
 	static long modPow(long x, long n, long mod){
 		long sum = 1;
 		while(n>0){
 			if((n&1) == 1 ){
-				
+				sum = sum * x % mod;
 			}
+			x = x * x % mod;
+			n >>= 1;
 		}
+		return sum;
 	}
 	
 	//オイラーのφ関数（nに対して、nと互いに素である1以上n以下の自然数の個数）
@@ -197,7 +213,6 @@ public class Main {
 		long[] rtn = new long[V+1];
 		Arrays.fill(rtn, INF);
 		rtn[from] = 0;
-		int count = 0;
 		
 		for(int i=0; i<V-1; i++){
 			boolean update = false;
