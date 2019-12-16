@@ -68,13 +68,25 @@ public class Main {
 		long deci_offset = 0;
 		long ans = 0;
 		for(int i=N-1; i>=0; i--){
-			long tmp = a[i]%B;
+			long tmp = 1;//[i]%B;
 			tmp *= modPow(10, deci_offset, B);
-			tmp %= B;
+			//tmp %= B;
 			deci_offset += deci[i]*L[i];
-			long T = modPow(10, deci[i], B);
-			long S = ((modPow(T, L[i], B)-1)*modinv(T-1, B))%B;
-			tmp *= S;
+			long sum = 0;
+			long tmp_d = 0;
+			int off = 1;
+			while(L[i]>0){
+				if((L[i]&1) == 1 ){
+					sum += a[i] * modPow(10, tmp_d, B) % B;
+					tmp_d += deci[i]*off;
+				}
+				
+				a[i] = a[i] * (modPow(10, deci[i]*off, B)+1) % B;
+				off <<= 1;
+				System.out.println(off);
+				L[i] >>= 1;
+			}
+			tmp *= sum;
 			tmp %= B;
 			ans += tmp;
 			ans %= B;
@@ -84,8 +96,8 @@ public class Main {
 	}
 	
 	
-	//mod p(素数)におけるaの逆元a^-1を求める
-	//条件：aとpが互いに素であること(aがpの倍数でないこと)
+	//aの逆元a^-1を求める
+	//条件：aとmodが互いに素であること(aがmodの倍数でないこと)
 	static long modinv(long a, long mod){
 		long b = mod;
 		long u = 1;
