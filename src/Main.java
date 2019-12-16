@@ -55,52 +55,55 @@ public class Main {
 		//int N = scan.nextInt();
 		//long L = scan.nextLong();
 		//char[] A = scan.next().toCharArray();
-		int p = scan.nextInt();
-		int n = scan.nextInt();
+		int N = scan.nextInt();
+		long[] a = new long[N];
+		long[] L = new long[N];
+		long[] deci = new long[N];
+		for(int i=0; i<N; i++){
+			a[i] = scan.nextInt();
+			deci[i] = (int)Math.log10(a[i]) + 1;
+			L[i] = scan.nextInt();
+		}
+		long B = scan.nextLong();
+		long deci_offset = 0;
+		long ans = 0;
+		for(int i=N-1; i>=0; i--){
+			long tmp = a[i]%B;
+			tmp *= modPow(10, deci_offset, B);
+			tmp %= B;
+			deci_offset += deci[i]*L[i];
+			long T = modPow(10, deci[i], B);
+			long S = ((modPow(T, L[i], B)-1)*modinv(T-1, B))%B;
+			tmp *= S;
+			tmp %= B;
+			ans += tmp;
+			ans %= B;
+		}
 
-		int[] cnt = new int[p];
-		for(int i=0; i<p; i++){
-			//System.out.println(modPow(i, n, p));
-			cnt[(int)modPow(i, n, p)]++;
-		}
-		//for(int c : cnt)System.out.print(c+" ");
-		int ans = 0;
-		for(int i=0; i<p; i++){
-			for(int j=0; j<p; j++){
-				ans += cnt[i]*cnt[j]*cnt[(p+i-j)%p];
-			}
-		}
-		
-		
-		
 		System.out.println(ans);
 	}
 	
 	
-	static int count(int n){
-
-		long M = n;
-		long now_prime = 2;
-		long now_M = M;
-		int cnt = 0;
-		while(now_prime*now_prime<=M){
-
-			while(now_M%now_prime == 0){
-				now_M /= now_prime;
-				cnt++;
-			}
-				
-			
-			if(now_prime%2 == 0){
-				now_prime++;
-			}else{
-				now_prime += 2;
-			}
+	//mod p(素数)におけるaの逆元a^-1を求める
+	//条件：aとpが互いに素であること(aがpの倍数でないこと)
+	static long modinv(long a, long mod){
+		long b = mod;
+		long u = 1;
+		long v = 0;
+		while(b>0){
+			long t = a/b;
+			a -= t*b;
+			long tmp = b;
+			b = a;
+			a = tmp;
+			u -= t*v;
+			tmp = v;
+			v = u;
+			u = tmp;
 		}
-		if (now_M>1){
-			cnt++;
-		}
-		return cnt;
+		u %= mod;
+		if(u<0) u+=mod;
+		return u;
 	}
 	
 	//繰り返し二乗法(x^n)
