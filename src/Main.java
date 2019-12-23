@@ -56,45 +56,65 @@ public class Main {
 		//long L = scan.nextLong();
 		//char[] A = scan.next().toCharArray();
 		int N = scan.nextInt();
-		long[] a = new long[N];
-		long[] L = new long[N];
-		long[] deci = new long[N];
-		for(int i=0; i<N; i++){
-			a[i] = scan.nextInt();
-			deci[i] = (int)Math.log10(a[i]) + 1;
-			L[i] = scan.nextInt();
+		long[] A = new long[N];
+		long[] B = new long[N];
+		long[] C = new long[N];
+		for(int i=0; i<N; i++)A[i] = scan.nextLong();
+		for(int i=0; i<N; i++)B[i] = scan.nextLong();
+		for(int i=0; i<N; i++)C[i] = scan.nextLong();
+		Arrays.sort(A);
+		Arrays.sort(B);
+		Arrays.sort(C);
+		
+		long[] tmp_B = new long[N+1];
+		tmp_B[N-1] = N - lower_bound(C, B[N-1]+1);
+		for(int i=N-2; i>=0; i--){
+			int ind = lower_bound(C, B[i]+1);
+			tmp_B[i] = tmp_B[i+1] + N - ind;
 		}
-		long B = scan.nextLong();
-		long deci_offset = 0;
+		long[] tmp_A = new long[N];
+		tmp_A[N-1] = tmp_B[lower_bound(B, A[N-1]+1)];
+		for(int i=N-2; i>=0; i--){
+			int ind = lower_bound(B, A[i]+1);
+			tmp_A[i] = tmp_A[i+1] + tmp_B[ind];
+		}
 		long ans = 0;
-		for(int i=N-1; i>=0; i--){
-			long tmp = 1;//[i]%B;
-			tmp *= modPow(10, deci_offset, B);
-			//tmp %= B;
-			deci_offset += deci[i]*L[i];
-			long sum = 0;
-			long tmp_d = 0;
-			int off = 1;
-			while(L[i]>0){
-				if((L[i]&1) == 1 ){
-					sum += a[i] * modPow(10, tmp_d, B) % B;
-					tmp_d += deci[i]*off;
-				}
-				
-				a[i] = a[i] * (modPow(10, deci[i]*off, B)+1) % B;
-				off <<= 1;
-				System.out.println(off);
-				L[i] >>= 1;
-			}
-			tmp *= sum;
-			tmp %= B;
-			ans += tmp;
-			ans %= B;
+		for(long l : tmp_A){
+			ans += l;
 		}
+		/*
+		for(long l : A)System.out.print(l+"\t");
+		System.out.println();
+		for(long l : B)System.out.print(l+"\t");
+		System.out.println();
+		for(long l : C)System.out.print(l+"\t");
+		System.out.println();
+		for(long l : tmp_B)System.out.print(l+"\t");
+		System.out.println();
+		for(long l : tmp_A)System.out.print(l+"\t");
+		System.out.println();
+*/
 
-		System.out.println(ans);
+		System.out.println(tmp_A[0]);
+		
+		
 	}
 	
+	//a_i≧kとなるような最小のiを求める(0≦i≦N-1)
+	static int lower_bound(long[] A, long k){
+		int N = A.length;
+		int lb = -1;
+		int ub = N;
+		while(ub-lb > 1){
+			int mid = (lb + ub) / 2;
+			if(A[mid] >= k){
+				ub = mid;
+			}else{
+				lb = mid;
+			}
+		}
+		return ub;
+	}
 	
 	//aの逆元a^-1を求める
 	//条件：aとmodが互いに素であること(aがmodの倍数でないこと)
@@ -138,7 +158,7 @@ public class Main {
 			if((n&1) == 1 ){
 				sum = sum * x % mod;
 			}
-			x = x * x % mod;
+			x = (x * x) % mod;
 			n >>= 1;
 		}
 		return sum;
