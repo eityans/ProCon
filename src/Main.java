@@ -55,50 +55,169 @@ public class Main {
 		//int N = scan.nextInt();
 		//long L = scan.nextLong();
 		//char[] A = scan.next().toCharArray();
-		int N = scan.nextInt();
-		long[] A = new long[N];
-		long[] B = new long[N];
-		long[] C = new long[N];
-		for(int i=0; i<N; i++)A[i] = scan.nextLong();
-		for(int i=0; i<N; i++)B[i] = scan.nextLong();
-		for(int i=0; i<N; i++)C[i] = scan.nextLong();
-		Arrays.sort(A);
-		Arrays.sort(B);
-		Arrays.sort(C);
-		
-		long[] tmp_B = new long[N+1];
-		tmp_B[N-1] = N - lower_bound(C, B[N-1]+1);
-		for(int i=N-2; i>=0; i--){
-			int ind = lower_bound(C, B[i]+1);
-			tmp_B[i] = tmp_B[i+1] + N - ind;
-		}
-		long[] tmp_A = new long[N];
-		tmp_A[N-1] = tmp_B[lower_bound(B, A[N-1]+1)];
-		for(int i=N-2; i>=0; i--){
-			int ind = lower_bound(B, A[i]+1);
-			tmp_A[i] = tmp_A[i+1] + tmp_B[ind];
-		}
-		long ans = 0;
-		for(long l : tmp_A){
-			ans += l;
-		}
-		/*
-		for(long l : A)System.out.print(l+"\t");
-		System.out.println();
-		for(long l : B)System.out.print(l+"\t");
-		System.out.println();
-		for(long l : C)System.out.print(l+"\t");
-		System.out.println();
-		for(long l : tmp_B)System.out.print(l+"\t");
-		System.out.println();
-		for(long l : tmp_A)System.out.print(l+"\t");
-		System.out.println();
-*/
 
-		System.out.println(tmp_A[0]);
+		long N = scan.nextLong();
 		
-		
+		if(N == 2){
+			System.out.println("-1");
+		}else{
+			char[][] ans = null;
+			List<long[]> primes = factorization(N);
+			//2^nの場合
+			if(primes.size() == 1 && primes.get(0)[0] == 2){
+				int loop = (int)N/4;
+				ans = loops(box4(), loop);
+			}else{
+				if(primes.get(0)[0] == 2){
+					long p = primes.get(1)[0];
+					int loop = (int)(N/p);
+					ans = loops(boxp((int)p), loop);
+				}else{
+					long p = primes.get(0)[0];
+					int loop = (int)(N/p);
+					ans = loops(boxp((int)p), loop);
+				}
+			}
+			for(char[] line : ans){
+				System.out.println(String.valueOf(line));
+			}
+		}	
 	}
+
+	//pは素数(奇数)
+	static char[][] boxp(int p){
+		char[][] rtn = null;
+		char[][] tmp = {
+			{'o','.','.'},
+			{'o','.','.'},
+			{'.','p','p'}
+		};	
+		if(p == 3){
+			rtn = tmp;
+		}else{
+			rtn = new char[p][p];
+			if(p%6 == 1){
+				int loop = p-1/3;
+				char[][] boxs = loops(tmp, loop);
+				char moji = 'a';
+				for(int i=0; i<(p-1)/2; i++){
+					rtn[0][i*2] = moji;
+					rtn[0][i*2 + 1] = moji;
+					if(moji == 'a'){
+						moji = 'b';
+					}else{
+						moji = 'a';
+					}
+				}
+				rtn[0][p-1] = '.';
+				for(int i=1;i<p;i++){
+					for(int j=0; j<p-1; j++){
+						rtn[i][j] = boxs[i-1][j];
+					}
+				}
+				for(int i=0; i<(p-1)/2; i++){
+					rtn[2*i+1][p-1] = moji;
+					rtn[2*i+2][p-1] = moji;
+					if(moji == 'a'){
+						moji = 'b';
+					}else{
+						moji = 'a';
+					}
+				}
+			}
+			if(p%6 == 5){
+				int loop = (p-2)/3;
+				char[][] boxs = loops(tmp, loop);
+				char moji = 'a';
+				for(int i=0; i<(p-1)/2; i++){
+					rtn[0][i*2] = moji;
+					rtn[0][i*2 + 1] = moji;
+					if(moji == 'a'){
+						moji = 'b';
+					}else{
+						moji = 'a';
+					}
+				}
+				for(int i=0; i<(p-1)/2; i++){
+					rtn[2*i][p-1] = moji;
+					rtn[2*i+1][p-1] = moji;
+					if(moji == 'a'){
+						moji = 'b';
+					}else{
+						moji = 'a';
+					}
+				}
+				for(int i=0; i<(p-1)/2; i++){
+					rtn[p-1][p-1-i*2] = moji;
+					rtn[p-1][p-1-i*2 - 1] = moji;
+					if(moji == 'a'){
+						moji = 'b';
+					}else{
+						moji = 'a';
+					}
+				}
+				for(int i=0; i<(p-1)/2; i++){
+					rtn[p-(2*i+1)][0] = moji;
+					rtn[p-(2*i+2)][0] = moji;
+					if(moji == 'a'){
+						moji = 'b';
+					}else{
+						moji = 'a';
+					}
+				}
+				if(p != 5){
+					for(int i=0; i<loop; i++){
+						for(int j=0; j<3; j++){
+							for(int k=0; k<3; k++){
+								boxs[i*3+j][i*3+k] = box3()[j][k];
+							}
+						}
+					}
+				}
+				for(int i=0;i<p-2;i++){
+					for(int j=0; j<p-2; j++){
+						rtn[i+1][j+1] = boxs[i][j];
+					}
+				}
+			}
+		}
+		
+		return rtn;
+	}
+
+	static char[][] loops(char[][] box, int loop){
+		int n = box.length;
+		char[][] rtn = new char[n*loop][n*loop];
+		for(int i=0; i<loop; i++){
+			for(int j=0; j<loop; j++){
+				for(int k=0; k<n; k++){	
+					for(int l=0; l<n; l++){
+						rtn[i*n+k][j*n+l] = box[k][l] == '.' ? box[k][l] : (char)(box[k][l]+5*((i+j)%2));
+					}
+				}
+			}
+		}
+		return rtn;
+	}
+
+	static char[][] box4() {
+		char[][] rtn = {
+			{'a','b','c','c'},
+			{'a','b','d','d'},
+			{'c','c','a','b'},
+			{'d','d','a','b'}
+		};	
+		return rtn;
+	}
+	static char[][] box3() {
+		char[][] rtn = {
+			{'h','j','j'},
+			{'h','.','k'},
+			{'i','i','k'}
+		};	
+		return rtn;
+	}
+
 	
 	//a_i≧kとなるような最小のiを求める(0≦i≦N-1)
 	static int lower_bound(long[] A, long k){
