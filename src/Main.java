@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.math.BigInteger;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,171 +56,21 @@ public class Main {
 		//int N = scan.nextInt();
 		//long L = scan.nextLong();
 		//char[] A = scan.next().toCharArray();
-
-		long N = scan.nextLong();
 		
-		if(N == 2){
-			System.out.println("-1");
+		int N = scan.nextInt();
+		int M = scan.nextInt();
+		
+		if(N>M){
+			System.out.println(N);
 		}else{
-			char[][] ans = null;
-			List<long[]> primes = factorization(N);
-			//2^nの場合
-			if(primes.size() == 1 && primes.get(0)[0] == 2){
-				int loop = (int)N/4;
-				ans = loops(box4(), loop);
-			}else{
-				if(primes.get(0)[0] == 2){
-					long p = primes.get(1)[0];
-					int loop = (int)(N/p);
-					ans = loops(boxp((int)p), loop);
-				}else{
-					long p = primes.get(0)[0];
-					int loop = (int)(N/p);
-					ans = loops(boxp((int)p), loop);
-				}
-			}
-			for(char[] line : ans){
-				System.out.println(String.valueOf(line));
-			}
-		}	
-	}
-
-	//pは素数(奇数)
-	static char[][] boxp(int p){
-		char[][] rtn = null;
-		char[][] tmp = {
-			{'o','.','.'},
-			{'o','.','.'},
-			{'.','p','p'}
-		};	
-		if(p == 3){
-			rtn = tmp;
-		}else{
-			rtn = new char[p][p];
-			if(p%6 == 1){
-				int loop = p-1/3;
-				char[][] boxs = loops(tmp, loop);
-				char moji = 'a';
-				for(int i=0; i<(p-1)/2; i++){
-					rtn[0][i*2] = moji;
-					rtn[0][i*2 + 1] = moji;
-					if(moji == 'a'){
-						moji = 'b';
-					}else{
-						moji = 'a';
-					}
-				}
-				rtn[0][p-1] = '.';
-				for(int i=1;i<p;i++){
-					for(int j=0; j<p-1; j++){
-						rtn[i][j] = boxs[i-1][j];
-					}
-				}
-				for(int i=0; i<(p-1)/2; i++){
-					rtn[2*i+1][p-1] = moji;
-					rtn[2*i+2][p-1] = moji;
-					if(moji == 'a'){
-						moji = 'b';
-					}else{
-						moji = 'a';
-					}
-				}
-			}
-			if(p%6 == 5){
-				int loop = (p-2)/3;
-				char[][] boxs = loops(tmp, loop);
-				char moji = 'a';
-				for(int i=0; i<(p-1)/2; i++){
-					rtn[0][i*2] = moji;
-					rtn[0][i*2 + 1] = moji;
-					if(moji == 'a'){
-						moji = 'b';
-					}else{
-						moji = 'a';
-					}
-				}
-				for(int i=0; i<(p-1)/2; i++){
-					rtn[2*i][p-1] = moji;
-					rtn[2*i+1][p-1] = moji;
-					if(moji == 'a'){
-						moji = 'b';
-					}else{
-						moji = 'a';
-					}
-				}
-				for(int i=0; i<(p-1)/2; i++){
-					rtn[p-1][p-1-i*2] = moji;
-					rtn[p-1][p-1-i*2 - 1] = moji;
-					if(moji == 'a'){
-						moji = 'b';
-					}else{
-						moji = 'a';
-					}
-				}
-				for(int i=0; i<(p-1)/2; i++){
-					rtn[p-(2*i+1)][0] = moji;
-					rtn[p-(2*i+2)][0] = moji;
-					if(moji == 'a'){
-						moji = 'b';
-					}else{
-						moji = 'a';
-					}
-				}
-				if(p != 5){
-					for(int i=0; i<loop; i++){
-						for(int j=0; j<3; j++){
-							for(int k=0; k<3; k++){
-								boxs[i*3+j][i*3+k] = box3()[j][k];
-							}
-						}
-					}
-				}
-				for(int i=0;i<p-2;i++){
-					for(int j=0; j<p-2; j++){
-						rtn[i+1][j+1] = boxs[i][j];
-					}
-				}
-			}
+			System.out.println(M);
 		}
 		
-		return rtn;
+
 	}
 
-	static char[][] loops(char[][] box, int loop){
-		int n = box.length;
-		char[][] rtn = new char[n*loop][n*loop];
-		for(int i=0; i<loop; i++){
-			for(int j=0; j<loop; j++){
-				for(int k=0; k<n; k++){	
-					for(int l=0; l<n; l++){
-						rtn[i*n+k][j*n+l] = box[k][l] == '.' ? box[k][l] : (char)(box[k][l]+5*((i+j)%2));
-					}
-				}
-			}
-		}
-		return rtn;
-	}
-
-	static char[][] box4() {
-		char[][] rtn = {
-			{'a','b','c','c'},
-			{'a','b','d','d'},
-			{'c','c','a','b'},
-			{'d','d','a','b'}
-		};	
-		return rtn;
-	}
-	static char[][] box3() {
-		char[][] rtn = {
-			{'h','j','j'},
-			{'h','.','k'},
-			{'i','i','k'}
-		};	
-		return rtn;
-	}
-
-	
 	//a_i≧kとなるような最小のiを求める(0≦i≦N-1)
+	//存在しなかったら-1を返す
 	static int lower_bound(long[] A, long k){
 		int N = A.length;
 		int lb = -1;
@@ -234,6 +85,24 @@ public class Main {
 		}
 		return ub;
 	}
+
+		//k≧a_iとなるような最大のiを求める(0≦i≦N-1)
+		//存在しなかったらa_N-1を返す
+		static int upper_bound(long[] A, long k){
+			int N = A.length;
+			int lb = -1;
+			int ub = N;
+			while(ub-lb > 1){
+				int mid = (lb + ub) / 2;
+				if(A[mid] <= k){
+					lb = mid;
+				}else{
+					ub = mid;
+				}
+			}
+			if(lb == N) lb = N-1;
+			return lb;
+		}
 	
 	//aの逆元a^-1を求める
 	//条件：aとmodが互いに素であること(aがmodの倍数でないこと)
@@ -371,6 +240,11 @@ public class Main {
 	static long gcd(long a, long b){
 		if(b == 0) return a;
 		return gcd(b, a%b);
+	}
+
+	static BigInteger biggcd(BigInteger a, BigInteger b){
+		if(b == BigInteger.ZERO) return a;
+		return biggcd(b, a.remainder(b));
 	}
 	
 	//Bellman-Ford法
