@@ -58,13 +58,40 @@ public class Main {
 		//char[] A = scan.next().toCharArray();
 		
 		int N = scan.nextInt();
-		int M = scan.nextInt();
-		
-		if(N>M){
-			System.out.println(N);
-		}else{
-			System.out.println(M);
+		long D = scan.nextLong();
+		long A = scan.nextLong();
+		long[][] mon = new long[N][2];
+		for(int i=0; i<N; i++){
+			mon[i][0] = scan.nextLong();
+			mon[i][1] = scan.nextLong();
 		}
+		Arrays.sort(mon, (a,b)-> Long.compare(a[0], b[0]));
+		long[] sum_d = new long[N+1];
+		int R = 0;
+		long ans = 0;
+		for(int L=0; L<N; L++){
+			if(L!=0)sum_d[L] += sum_d[L-1];
+
+			long x = mon[L][0];
+			long h = mon[L][1];
+
+			if(sum_d[L]<h){
+				R = Math.max(R,L+1);
+				while(R<N && mon[R][0] - x <= 2*D)R++;
+
+				long need_d = h-sum_d[L];
+				long cnt = (need_d + A -1)/A;
+
+				sum_d[L] += cnt*A;
+				sum_d[R] -= cnt*A;
+				ans += cnt;
+			}
+
+		}
+
+		System.out.println(ans);
+	
+
 		
 
 	}
