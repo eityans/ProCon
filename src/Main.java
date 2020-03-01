@@ -1,25 +1,14 @@
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.math.BigInteger;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.PriorityQueue;
 import java.util.Queue;
-import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeSet;
  
@@ -50,50 +39,35 @@ public class Main {
 	//旧入力
 	//Scanner sc = new Scanner(System.in);
 	//int N = Integer.parseInt(sc.next());
+	static int[] dx = {1,-1,0,0};
+	static int[] dy = {0,0,1,-1};
+	static int[] dx8 = {1,-1,0,0,1,1,-1,-1};
+	static int[] dy8 = {0,0,1,-1,1,-1,1,-1};
 	
+	static int[] R; 
 	public static void main(String[] args) throws Exception {
 		FastScanner scan = new FastScanner();
+		PrintWriter out = new PrintWriter(System.out);
 		//int N = scan.nextInt();
 		//long L = scan.nextLong();
 		//char[] A = scan.next().toCharArray();
-		
-		int N = scan.nextInt();
-		long D = scan.nextLong();
-		long A = scan.nextLong();
-		long[][] mon = new long[N][2];
-		for(int i=0; i<N; i++){
-			mon[i][0] = scan.nextLong();
-			mon[i][1] = scan.nextLong();
+
+		out.println();	
+		out.flush();
+	}
+
+	//i_C_jをMODで割ったあまりを求める（計算量最悪）
+	static long com(long i, long j){
+		long rtn = 1L;
+		for(long z=i; z>(i-j); z--){
+			rtn *= z;
+			rtn %= MOD;
 		}
-		Arrays.sort(mon, (a,b)-> Long.compare(a[0], b[0]));
-		long[] sum_d = new long[N+1];
-		int R = 0;
-		long ans = 0;
-		for(int L=0; L<N; L++){
-			if(L!=0)sum_d[L] += sum_d[L-1];
-
-			long x = mon[L][0];
-			long h = mon[L][1];
-
-			if(sum_d[L]<h){
-				R = Math.max(R,L+1);
-				while(R<N && mon[R][0] - x <= 2*D)R++;
-
-				long need_d = h-sum_d[L];
-				long cnt = (need_d + A -1)/A;
-
-				sum_d[L] += cnt*A;
-				sum_d[R] -= cnt*A;
-				ans += cnt;
-			}
-
+		for(long z=1; z<=j; z++){
+			rtn *= modinv(z, MOD);
+			rtn %= MOD;
 		}
-
-		System.out.println(ans);
-	
-
-		
-
+		return rtn;
 	}
 
 	//a_i≧kとなるような最小のiを求める(0≦i≦N-1)
@@ -113,23 +87,23 @@ public class Main {
 		return ub;
 	}
 
-		//k≧a_iとなるような最大のiを求める(0≦i≦N-1)
-		//存在しなかったらa_N-1を返す
-		static int upper_bound(long[] A, long k){
-			int N = A.length;
-			int lb = -1;
-			int ub = N;
-			while(ub-lb > 1){
-				int mid = (lb + ub) / 2;
-				if(A[mid] <= k){
-					lb = mid;
-				}else{
-					ub = mid;
-				}
+	//k≧a_iとなるような最大のiを求める(0≦i≦N-1)
+	//存在しなかったらa_N-1を返す
+	static int upper_bound(long[] A, long k){
+		int N = A.length;
+		int lb = -1;
+		int ub = N;
+		while(ub-lb > 1){
+			int mid = (lb + ub) / 2;
+			if(A[mid] <= k){
+				lb = mid;
+			}else{
+				ub = mid;
 			}
-			if(lb == N) lb = N-1;
-			return lb;
 		}
+		if(lb == N) lb = N-1;
+		return lb;
+	}
 	
 	//aの逆元a^-1を求める
 	//条件：aとmodが互いに素であること(aがmodの倍数でないこと)
