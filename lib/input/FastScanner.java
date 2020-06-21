@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.NoSuchElementException;
 
+//https://qiita.com/p_shiki37/items/a0f6aac33bf60f5f65e4
 public class FastScanner {
   private final InputStream in = System.in;
   private final byte[] buffer = new byte[1024];
