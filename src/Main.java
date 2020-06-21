@@ -2,32 +2,28 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.PriorityQueue;
-import java.util.Queue;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
  
- 
-public class Main {
- 
+
+public class Main {	
+	
+	public static void main(String[] args) throws Exception {
+		
+		//int N = scan.nextInt();
+		//long L = scan.nextLong();
+		//double D = scan.nextDouble();
+		//char[] A = scan.next().toCharArray();
+
+		out.println();
+		out.flush();
+	}
+	
+	static FastScanner scan = new FastScanner();
+	static PrintWriter out = new PrintWriter(System.out);			 
 	static long MOD = 1_000_000_007;
-	static int INF = 1_000_000_007;
-	//static long INF = Long.MAX_VALUE;
-	//二項係数関連ここから-----
-	static boolean isPreprocessing = false;	//二項係数を計算するための前処理を行っているかどうかのフラグ
-	static int MAX = 666667;				//MAXまで階乗やそれらの逆元のテーブルを保持する。
-	static long[] fac;	//fac[i] := i! % MOD
-	static long[] inv;	//inv[i] := mod. MODにおける i の逆元
-	static long[] finv;	//finv[i] := mod. MODにおける i! の逆元(invの累積"積")
-	//二項係数関連おわり------
+	static long INF = 1_000_000_007;
 	
 	static int[] roots;		//Union-find木用
-	static int[] ans;
 	//static List<ArrayList<Integer>> G;	//グラフ用
 
 	static List<List<E>> G = new ArrayList<>();	//グラフ用
@@ -44,31 +40,35 @@ public class Main {
 	static int[] dx8 = {1,-1,0,0,1,1,-1,-1};
 	static int[] dy8 = {0,0,1,-1,1,-1,1,-1};
 	
-	static int[] R; 
-	public static void main(String[] args) throws Exception {
-		FastScanner scan = new FastScanner();
-		PrintWriter out = new PrintWriter(System.out);
-		//int N = scan.nextInt();
-		//long L = scan.nextLong();
-		//char[] A = scan.next().toCharArray();
-
-		out.println();	
-		out.flush();
+	
+	/*	グラフ形式の入力を行う
+	 * 	前提：M個の辺があるとき、以下の形式で辺情報が与えられることを期待している
+	 * 		1 2
+	 * 		2 3
+	 *  	2 4
+	 *  入力：
+	 *  	int		N		: 頂点の数
+	 *  	int 	M		: 辺の数
+	 *  	boolean	isArrow	: 無向グラフか有向グラフかを表すフラグ（trueならば有向グラフ）
+	 *  出力：ArrayList<ArrayList<Integer>>
+	 * 
+	 */
+	static ArrayList<ArrayList<Integer>> inputG(int N, int M, boolean isArrow){
+		ArrayList<ArrayList<Integer>> G = new ArrayList<>();
+		
+		for(int i=0; i<N; i++){
+			ArrayList<Integer> V = new ArrayList<>();
+			G.add(V);
+		}
+		for(int i=0; i<M; i++){
+			int u = scan.nextInt() - 1;
+			int v = scan.nextInt() - 1;
+			G.get(u).add(v);
+			if(!isArrow)G.get(v).add(u);
+		}
+		return G;
 	}
 
-	//i_C_jをMODで割ったあまりを求める（計算量最悪）
-	static long com(long i, long j){
-		long rtn = 1L;
-		for(long z=i; z>(i-j); z--){
-			rtn *= z;
-			rtn %= MOD;
-		}
-		for(long z=1; z<=j; z++){
-			rtn *= modinv(z, MOD);
-			rtn %= MOD;
-		}
-		return rtn;
-	}
 
 	//a_i≧kとなるような最小のiを求める(0≦i≦N-1)
 	//存在しなかったら-1を返す
@@ -218,9 +218,9 @@ public class Main {
 	}
 		
 	//約数の配列を返す
-	static int[] divisor(int num){
-		Set<Integer> divisors = new TreeSet<>();
-		int tmp=1;
+	static long[] divisor(long num){
+		Set<Long> divisors = new TreeSet<>();
+		long tmp=1;
 		while(tmp*tmp<=num){
 			if(num%tmp == 0){
 				divisors.add(tmp);
@@ -228,9 +228,9 @@ public class Main {
 			}
 			tmp++;
 		}
-		Integer[] rtn = new Integer[divisors.size()];
+		Long[] rtn = new Long[divisors.size()];
 		divisors.toArray(rtn);
-		int[] ans = new int[rtn.length];
+		long[] ans = new long[rtn.length];
 		for(int i=0; i<rtn.length; i++){
 			ans[i] = rtn[i];
 		}
@@ -492,33 +492,6 @@ public class Main {
 	//aとbの最小公倍数を返す
 	static long lcm (long a, long b) {
 		return ((a/gcd(a,b))*b);
-	}
-	
-	//二項係数用の前処理
-	static void COMinit(){
-		//二項係数演算用前処理
-		fac = new long[MAX+1];
-		fac[0] = 1L;
-		fac[1] = 1L;
-		inv = new long[MAX+1];
-		inv[1] = 1L;
-		finv = new long[MAX+1];
-		finv[0] = 1L;
-		finv[1] = 1L;
-		for(int i=2;i<MAX;i++){
-			fac[i] = fac[i-1] * i % MOD;
-			inv[i] = MOD - inv[(int)(MOD%i)] * (MOD/i) % MOD;
-			finv[i] = finv[i-1] * inv[i] % MOD;
-		}
-		isPreprocessing = true;
-	}
-	
-	//二項係数i_C_jをMODで割った余りを返す
-	static long COM(int i, int j){
-		if(i<j)return 0;
-		if(i<0 || j<0)return 0;
-		if(!isPreprocessing)COMinit();
-		return fac[i] * (finv[j] * finv[i-j] % MOD) % MOD;
 	}
 	
 	//入力
