@@ -15,7 +15,19 @@
   - `long phi(long n)`: オイラーのφ関数（nに対して、nと互いに素である1以上n以下の自然数の個数）
   - `long[] divisor(long num)`: 約数の配列を返す
   - `long fact(long a)`: 階乗
+  - `long modinv(long a, long mod)`: aの逆元を求める
+  - `long pow(long x, long n)`: 繰り返し二乗法(x^n)
+  - `long modPow(long x, long n, long mod)`:繰り返し二乗法(x^n % mod) 
+  - `boolean isPrime(int n)`: 素数判定
+  - `boolean[] eratosthenes(int n)`: N以下についての素数判定
+  - `long extGCD(long a, long b, long X, long Y)`: 拡張ユークリッドの互除法(ax+by=gcd(a,b)を満たすx,yを求める)
   - `double distance(double X1, double Y1, double X2, double Y2)`: 2点間の距離
+#### グラフ
+隣接リストでグラフを表す場合と、辺情報だけでグラフを表す場合の2つの入力が混在している
+- `ArrayList<ArrayList<Integer>> inputG(int N, int M, boolean isArrow)`: よくあるグラフ形式の入力から、つながっているかどうかだけを保存した隣接リストを返す（一番使う）
+- `long[] dijkstra(List<List<E>> G, int from`: Dijkstra法 隣接リストとstartの頂点を指定すると、すべての頂点への最短コストを返す
+- `long[] bellmanFord(List<E> Edges, int V, int from)`: Bellman-Ford法 辺情報とstartの頂点を指定すると、すべての頂点への最短コストを返す（負の重みの辺もOK）
+- `long kruskal(List<E> Edges, int V)`: Kruskal法 最小全域木を構成したときのコストの総和を返す
 
 ### あまり使わない(Keep)
 - `int[] joinArray(int[] A, int[] B)`: 2つのint配列を連結させる
