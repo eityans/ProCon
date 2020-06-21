@@ -9,6 +9,7 @@
 
 ### 適宜使用する
 - Combination: 二項分布の計算
+- UnionFind: Union-Find木
 - Mathmatics: 数学系ライブラリ
   - `List<long[]> factorization(long M)`: 素因数分解(index_0:素数 index_1:個数)
   - `long phi(long n)`: オイラーのφ関数（nに対して、nと互いに素である1以上n以下の自然数の個数）
