@@ -9,7 +9,7 @@ public class Combination {
 		
 		COMinit();
 
-		out.println(COM(4,2));
+		out.println(COM(4,2));	// 4_C_2 = 6
 		out.flush();
 	}
 	
