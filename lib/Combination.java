@@ -1,20 +1,6 @@
-import java.io.PrintWriter;
-
-import input.FastScanner;
 
 //	cf.	 https://drken1215.hatenablog.com/entry/2018/06/08/210000
 public class Combination {	
-	
-	public static void main(String[] args) throws Exception {
-		
-		COMinit();
-
-		out.println(COM(4,2));	// 4_C_2 = 6
-		out.flush();
-	}
-	
-	static FastScanner scan = new FastScanner();
-	static PrintWriter out = new PrintWriter(System.out);			 
 
 	static long MOD = 1_000_000_007;
 
