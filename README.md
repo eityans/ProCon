@@ -14,7 +14,12 @@
   - `long phi(long n)`: オイラーのφ関数（nに対して、nと互いに素である1以上n以下の自然数の個数）
   - `long[] divisor(long num)`: 約数の配列を返す
   - `long fact(long a)`: 階乗
-  - `double distance(double X1, double Y1, double X2, double Y2)`: ２点間の距離
+  - `double distance(double X1, double Y1, double X2, double Y2)`: 2点間の距離
+
+### あまり使わない(Keep)
+- `int[] joinArray(int[] A, int[] B)`: 2つのint配列を連結させる
+- `boolean arrayEqual(int[] A, int[] B)`: 2つのint配列が等しいかどうか判定する
+- ` List<long[]> factorizationMerge(List<long[]> A, List<long[]> B)`: AとBの素因数分解の結果をもとに、A*Bの素因数分解の結果を返す
 
 ## 背景
 提出用コードのテンプレートを所有してる。

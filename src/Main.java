@@ -69,40 +69,6 @@ public class Main {
 	}
 
 
-	//a_i≧kとなるような最小のiを求める(0≦i≦N-1)
-	//存在しなかったら-1を返す
-	static int lower_bound(long[] A, long k){
-		int N = A.length;
-		int lb = -1;
-		int ub = N;
-		while(ub-lb > 1){
-			int mid = (lb + ub) / 2;
-			if(A[mid] >= k){
-				ub = mid;
-			}else{
-				lb = mid;
-			}
-		}
-		return ub;
-	}
-
-	//k≧a_iとなるような最大のiを求める(0≦i≦N-1)
-	//存在しなかったらa_N-1を返す
-	static int upper_bound(long[] A, long k){
-		int N = A.length;
-		int lb = -1;
-		int ub = N;
-		while(ub-lb > 1){
-			int mid = (lb + ub) / 2;
-			if(A[mid] <= k){
-				lb = mid;
-			}else{
-				ub = mid;
-			}
-		}
-		if(lb == N) lb = N-1;
-		return lb;
-	}
 	
 	//aの逆元a^-1を求める
 	//条件：aとmodが互いに素であること(aがmodの倍数でないこと)
@@ -333,40 +299,10 @@ public class Main {
 		}
 	}
  
-	//素因数分解の結果AとBに対して、A*Bの素因数分解の結果を返す
-	static List<long[]> factorizationMerge(List<long[]> A, List<long[]> B){
-		List<long[]> primes = new ArrayList<>(A);
-		for(long[] b : B){
-			boolean isExist = false;
-			for(long[] a : primes){
-				if(a[0] == b[0]){
-					isExist = true;
-					a[1] += b[1]; 
-				}
-			}
-			if(!isExist)primes.add(b);
-		}
-		return primes;
-	}
-	
+
 
 	
-	//２つのint配列を連結させる
-	static int[] joinArray(int[] A, int[] B){
-		int[] tmp = new int[A.length + B.length];
-		System.arraycopy(A, 0, tmp, 0, A.length);
-		System.arraycopy(B, 0, tmp, A.length, B.length);
-		return tmp;
-	}
-	
-	//２つのint配列が等しいかどうか判定する
-	static boolean arrayEqual(int[] A, int[] B){
-		if(A.length != B.length)return false;
-		for(int i=0; i<A.length; i++){
-			if(A[i] != B[i])return false;
-		}
-		return true;
-	}
+
 	
 		
 	//GCD最大公約数を返す
