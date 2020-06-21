@@ -1,10 +1,8 @@
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
-import java.util.NoSuchElementException;
-import input.*;
 
+import input.FastScanner;
 
+//	cf.	 https://drken1215.hatenablog.com/entry/2018/06/08/210000
 public class Combination {	
 	
 	public static void main(String[] args) throws Exception {
